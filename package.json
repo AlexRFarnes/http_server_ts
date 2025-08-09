@@ -2,7 +2,6 @@
   "name": "learn_http_servers",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "type": "module",
   "scripts": {
     "build": "npx tsc",
