@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { config } from "../config.js";
 
 export const middlewareLogResponses = (
   req: Request,
@@ -12,6 +13,16 @@ export const middlewareLogResponses = (
       console.log(`[NON-OK] ${req.method} ${req.url} - Status: ${statusCode}`);
     }
   });
+
+  next();
+};
+
+export const middlewareMetricsInc = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  config.fileserverHits++;
 
   next();
 };
