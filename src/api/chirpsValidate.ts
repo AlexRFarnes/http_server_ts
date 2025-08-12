@@ -1,23 +1,23 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { respondWithError, respondWithJSON } from "./json.js";
 import { cleanText } from "./cleanText.js";
 
-export const handlerChirpsValidate = (req: Request, res: Response) => {
+export const handlerChirpsValidate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   type Parameters = { body: string };
 
-  let parameters: Parameters;
+  let parameters: Parameters = req.body;
 
   try {
-    parameters = req.body;
-  } catch (error) {
-    respondWithError(res, 400, "Invalid JSON");
-    return;
-  }
-
-  const maxChirpLength = 140;
-  if (parameters.body.length > maxChirpLength) {
-    respondWithError(res, 400, "Chirp is too long");
-    return;
+    const maxChirpLength = 140;
+    if (parameters.body.length > maxChirpLength) {
+      throw Error("Chirp is too long");
+    }
+  } catch (err) {
+    next(err);
   }
 
   const cleanedBody = cleanText(parameters.body);
