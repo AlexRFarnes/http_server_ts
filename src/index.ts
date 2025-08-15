@@ -29,7 +29,7 @@ app.get("/api/healthz", handlerReadiness);
 app.post("/api/validate_chirp", handlerChirpsValidate);
 app.get("/admin/metrics", handleMetrics);
 app.post("/admin/reset", handleReset);
-app.post("/api/users/");
+app.post("/api/users");
 
 app.use(errorHanlder);
 
