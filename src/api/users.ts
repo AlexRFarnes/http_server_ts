@@ -1,16 +1,19 @@
 import { Request, Response } from "express";
-import { NewUser } from "src/db/schema";
-import { createUser } from "src/db/queries/users";
+import { createUser } from "../db/queries/users.js";
+import { BadRequestError } from "./errors.js";
+import { respondWithJSON } from "./json.js";
 
-export const handleCreateUser = (req: Request, res: Response) => {
-  let email = req.body.email;
+export const handleCreateUser = async (req: Request, res: Response) => {
+  type parameteres = {
+    email: string;
+  };
+  const params: parameteres = req.body;
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!email || !emailRegex.test(email)) {
-    return res.status(400).json({ error: "Invalid email" });
+  if (!params.email) {
+    throw new BadRequestError("Missing required email field");
   }
-  let newUser = createUser({ email });
 
-  return res.status(401).json({ ...newUser });
+  const newUser = await createUser({ email: params.email });
+
+  respondWithJSON(res, 201, { ...newUser });
 };

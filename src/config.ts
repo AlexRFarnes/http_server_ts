@@ -10,9 +10,15 @@ const envOrThrow = (key: string): string => {
   else return process.env[key] as string;
 };
 
+type Config = {
+  api: APIConfig;
+  db: DBConfig;
+};
+
 type APIConfig = {
   fileserverHits: number;
-  db: DBConfig;
+  platform: string;
+  port: number;
 };
 
 type DBConfig = {
@@ -24,8 +30,12 @@ const migrationConfig: MigrationConfig = {
   migrationsFolder: "./src/db/migrations",
 };
 
-export const config: APIConfig = {
-  fileserverHits: 0,
+export const config: Config = {
+  api: {
+    fileserverHits: 0,
+    platform: envOrThrow("PLATFORM"),
+    port: Number(envOrThrow("PORT")),
+  },
   db: {
     url: envOrThrow("DB_URL"),
     migrationConfig,

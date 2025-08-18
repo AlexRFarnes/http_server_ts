@@ -2,9 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import { config } from "../config.js";
 import {
   BadRequestError,
-  ForbiddenError,
   NotFoundError,
-  UnauthorizedError,
+  UserForbiddenError,
+  UserNotAuthenticatedError,
 } from "./errors.js";
 
 export const middlewareLogResponses = (
@@ -28,7 +28,7 @@ export const middlewareMetricsInc = (
   res: Response,
   next: NextFunction
 ) => {
-  config.fileserverHits++;
+  config.api.fileserverHits++;
 
   next();
 };
@@ -42,10 +42,10 @@ export const errorHanlder = (
   if (err instanceof BadRequestError) {
     return res.status(400).json({ error: err.message });
   }
-  if (err instanceof UnauthorizedError) {
+  if (err instanceof UserNotAuthenticatedError) {
     return res.status(401).json({ error: err.message });
   }
-  if (err instanceof ForbiddenError) {
+  if (err instanceof UserForbiddenError) {
     return res.status(403).json({ error: err.message });
   }
   if (err instanceof NotFoundError) {
