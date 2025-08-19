@@ -2,7 +2,7 @@ import express from "express";
 import { handlerReadiness } from "./api/readiness.js";
 import { handleMetrics } from "./api/metrics.js";
 import { handleReset } from "./api/reset.js";
-import { handlerChirpsValidate } from "./api/chirpsValidate.js";
+import { handleCreateChirp } from "./api/chirps.js";
 import {
   middlewareLogResponses,
   middlewareMetricsInc,
@@ -24,10 +24,10 @@ app.use(middlewareLogResponses);
 app.use("/app", middlewareMetricsInc, express.static("./src/app"));
 
 app.get("/api/healthz", handlerReadiness);
-app.post("/api/validate_chirp", handlerChirpsValidate);
 app.get("/admin/metrics", handleMetrics);
 app.post("/admin/reset", handleReset);
 app.post("/api/users", handleCreateUser);
+app.post("/api/chirps", handleCreateChirp);
 
 app.use(errorHanlder);
 
