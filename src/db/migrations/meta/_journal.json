@@ -8,6 +8,13 @@
       "when": 1755245537586,
       "tag": "0000_thankful_bug",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1755669713885,
+      "tag": "0001_giant_dreaming_celestial",
+      "breakpoints": true
     }
   ]
 }

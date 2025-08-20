@@ -1,21 +1,20 @@
-import { NextFunction, Request, Response } from "express";
-import { validateChirp } from "./chirpsValidate.js";
-import { BadRequestError } from "./errors.js";
+import { Request, Response, NextFunction } from "express";
+import { validateChirp } from "../utils/chirpsValidate.js";
+import { createChirp } from "../db/queries/chirps.js";
+import { respondWithJSON } from "./json.js";
 
-export const handleCreateChirp = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const handleCreateChirp = async (req: Request, res: Response) => {
   type Parameters = {
     body: string;
     userId: string;
   };
-  const parameters: Parameters = req.body;
-  let cleantedChirp = "";
-  try {
-    cleantedChirp = await validateChirp(parameters.body);
-  } catch (err) {
-    next(err);
-  }
+  const params: Parameters = req.body;
+  const cleantedChirp = validateChirp(params.body);
+
+  const newChirp = await createChirp({
+    body: cleantedChirp,
+    userId: params.userId,
+  });
+
+  respondWithJSON(res, 201, { ...newChirp });
 };

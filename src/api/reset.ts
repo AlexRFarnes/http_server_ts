@@ -1,4 +1,4 @@
-import { Response, Request } from "express";
+import { Response, Request, NextFunction } from "express";
 import { config } from "../config.js";
 import { reset } from "../db/queries/users.js";
 import { UserForbiddenError } from "./errors.js";

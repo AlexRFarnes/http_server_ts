@@ -33,7 +33,7 @@ export const middlewareMetricsInc = (
   next();
 };
 
-export const errorHanlder = (
+export const errorHandler = (
   err: Error,
   req: Request,
   res: Response,

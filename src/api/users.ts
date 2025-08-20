@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { createUser } from "../db/queries/users.js";
 import { BadRequestError } from "./errors.js";
 import { respondWithJSON } from "./json.js";
