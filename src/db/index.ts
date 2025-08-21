@@ -1,8 +1,14 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
-import * as schema from "./schema/users.js";
+import * as usersSchema from "./schema/users.js";
+import * as chirpsSchema from "./schema/chirps.js";
 import { config } from "../config.js";
+
+const schema = {
+  ...usersSchema,
+  ...chirpsSchema,
+};
 
 const conn = postgres(config.db.url);
 export const db = drizzle(conn, { schema });

@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { validateChirp } from "../utils/chirpsValidate.js";
-import { createChirp } from "../db/queries/chirps.js";
+import { createChirp, getAllChirps, getChirp } from "../db/queries/chirps.js";
 import { respondWithJSON } from "./json.js";
+import { NotFoundError } from "./errors.js";
 
 export const handleCreateChirp = async (req: Request, res: Response) => {
   type Parameters = {
@@ -18,3 +19,19 @@ export const handleCreateChirp = async (req: Request, res: Response) => {
 
   respondWithJSON(res, 201, { ...newChirp });
 };
+
+export const handleGetChirps = async (req: Request, res: Response) => {
+  const result = await getAllChirps();
+  respondWithJSON(res, 200, result);
+};
+
+export async function handleGetChirp(req: Request, res: Response) {
+  const { chirpId } = req.params;
+  const result = await getChirp(chirpId);
+
+  if (!result) {
+    throw new NotFoundError(`Chirp with chirpId: ${chirpId} not found`);
+  }
+
+  respondWithJSON(res, 200, result);
+}
