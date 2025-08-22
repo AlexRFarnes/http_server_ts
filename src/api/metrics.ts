@@ -1,4 +1,4 @@
-import { Response, Request, NextFunction } from "express";
+import { Response, Request } from "express";
 import { config } from "../config.js";
 
 export const handleMetrics = (req: Request, res: Response) => {

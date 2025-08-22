@@ -1,4 +1,7 @@
+import postgres from "postgres";
 import express from "express";
+import { migrate } from "drizzle-orm/postgres-js/migrator";
+import { drizzle } from "drizzle-orm/postgres-js";
 import { handlerReadiness } from "./api/readiness.js";
 import { handleMetrics } from "./api/metrics.js";
 import { handleReset } from "./api/reset.js";
@@ -12,11 +15,9 @@ import {
   middlewareMetricsInc,
   errorHandler,
 } from "./api/middleware.js";
-import postgres from "postgres";
-import { migrate } from "drizzle-orm/postgres-js/migrator";
-import { drizzle } from "drizzle-orm/postgres-js";
 import { config } from "./config.js";
 import { handleCreateUser } from "./api/users.js";
+import { handleLogin } from "./api/login.js";
 
 const migrationClient = postgres(config.db.url, { max: 1 });
 await migrate(drizzle(migrationClient), config.db.migrationConfig);
@@ -35,6 +36,9 @@ app.get("/admin/metrics", (req, res, next) => {
 });
 app.post("/admin/reset", (req, res, next) => {
   Promise.resolve(handleReset(req, res)).catch(next);
+});
+app.post("/api/login", (req, res, next) => {
+  Promise.resolve(handleLogin(req, res)).catch(next);
 });
 app.post("/api/users", (req, res, next) => {
   Promise.resolve(handleCreateUser(req, res)).catch(next);
