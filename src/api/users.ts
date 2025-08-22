@@ -13,19 +13,15 @@ export const handleCreateUser = async (req: Request, res: Response) => {
 
   const params: parameteres = req.body;
 
-  if (!params.email) {
-    throw new BadRequestError("Missing required email field.");
+  if (!params.email || !params.password) {
+    throw new BadRequestError("Missing required fields");
   }
 
-  if (!params.password) {
-    throw new BadRequestError("Missing required password field.");
-  }
-
-  const hash = await hashPassword(params.password);
+  const hashedPassword = await hashPassword(params.password);
 
   const newUser = await createUser({
     email: params.email,
-    hashedPassword: hash,
+    hashedPassword,
   });
 
   const safeUser = toPublicUser(newUser);
