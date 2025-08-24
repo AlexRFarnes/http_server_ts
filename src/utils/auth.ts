@@ -27,7 +27,7 @@ export async function checkPassword(
 }
 
 export function makeJWT(
-  userID: string,
+  userId: string,
   expiresIn: number,
   secret: string
 ): string {
@@ -35,7 +35,7 @@ export function makeJWT(
   const expiresAt = issuedAt + expiresIn;
   const payload: Payload = {
     iss: TOKEN_ISSUER,
-    sub: userID,
+    sub: userId,
     iat: issuedAt,
     exp: expiresAt,
   };

@@ -47,18 +47,18 @@ describe("Password Hashing", () => {
 describe("JWT Functions", () => {
   const secret = "secret";
   const wrongSecret = "wrong_secret";
-  const userID = "some-unique-user-id";
+  const userId = "some-unique-user-id";
   let validToken: string;
   let expiredToken: string;
 
   beforeAll(() => {
-    validToken = makeJWT(userID, 3600, secret);
-    expiredToken = makeJWT(userID, -1, secret);
+    validToken = makeJWT(userId, 3600, secret);
+    expiredToken = makeJWT(userId, -1, secret);
   });
 
   it("should validate a valid token", () => {
     const result = validateJWT(validToken, secret);
-    expect(result).toBe(userID);
+    expect(result).toBe(userId);
   });
 
   it("should throw an error for an invalid token string", () => {
