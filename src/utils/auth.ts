@@ -3,6 +3,7 @@ import { NewUser, PublicUser } from "../db/schema/users.js";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "jsonwebtoken";
 import { UserNotAuthenticatedError } from "../api/errors.js";
+import { Request } from "express";
 
 const SALT_ROUNDS = 10;
 const TOKEN_ISSUER = "chirpy";
@@ -60,4 +61,16 @@ export function validateJWT(tokenString: string, secret: string): string {
     throw new UserNotAuthenticatedError("No user ID in token");
   }
   return decoded.sub;
+}
+
+export function getBearerToken(req: Request): string {
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) {
+    throw new UserNotAuthenticatedError("No authorization header");
+  }
+  const [type, token] = authHeader.split(" ");
+  if (type !== "Bearer") {
+    throw new UserNotAuthenticatedError("Invalid authorization type");
+  }
+  return token.trim();
 }

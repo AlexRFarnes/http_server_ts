@@ -1,8 +1,10 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { validateChirp } from "../utils/chirpsValidate.js";
 import { createChirp, getAllChirps, getChirp } from "../db/queries/chirps.js";
 import { respondWithJSON } from "./json.js";
 import { NotFoundError } from "./errors.js";
+import { getBearerToken, validateJWT } from "../utils/auth.js";
+import { config } from "../config.js";
 
 export const handleCreateChirp = async (req: Request, res: Response) => {
   type Parameters = {
@@ -12,9 +14,12 @@ export const handleCreateChirp = async (req: Request, res: Response) => {
   const params: Parameters = req.body;
   const cleantedChirp = validateChirp(params.body);
 
+  const token = getBearerToken(req);
+  const userId = validateJWT(token, config.api.jwtSecret);
+
   const newChirp = await createChirp({
     body: cleantedChirp,
-    userId: params.userId,
+    userId: userId,
   });
 
   respondWithJSON(res, 201, { ...newChirp });

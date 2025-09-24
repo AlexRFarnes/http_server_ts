@@ -20,6 +20,7 @@ type APIConfig = {
   platform: string;
   port: number;
   jwtSecret: string;
+  jwtExpiresInSeconds: number;
 };
 
 type DBConfig = {
@@ -37,6 +38,7 @@ export const config: Config = {
     platform: envOrThrow("PLATFORM"),
     port: Number(envOrThrow("PORT")),
     jwtSecret: envOrThrow("JWT_SECRET"),
+    jwtExpiresInSeconds: Number(envOrThrow("JWT_EXPIRES_IN_SECONDS")),
   },
   db: {
     url: envOrThrow("DB_URL"),
