@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { JwtPayload } from "jsonwebtoken";
 import { UserNotAuthenticatedError } from "../api/errors.js";
 import { Request } from "express";
-
+import crypto from "crypto";
 const SALT_ROUNDS = 10;
 const TOKEN_ISSUER = "chirpy";
 
@@ -73,4 +73,8 @@ export function getBearerToken(req: Request): string {
     throw new UserNotAuthenticatedError("Invalid authorization type");
   }
   return token.trim();
+}
+
+export function makeRefreshToken(): string {
+  return crypto.randomBytes(32).toString("hex");
 }
