@@ -5,7 +5,7 @@ import { respondWithJSON } from "./json.js";
 import { toPublicUser } from "../utils/auth.js";
 import { getUserByEmail } from "../db/queries/users.js";
 import { config } from "../config.js";
-import { PublicUser } from "src/db/schema/users.js";
+import { PublicUser } from "src/db/schema/schema.js";
 
 type LoginResponse = PublicUser & {
   token: string;

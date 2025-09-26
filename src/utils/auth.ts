@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { NewUser, PublicUser } from "../db/schema/users.js";
+import { NewUser, PublicUser } from "../db/schema/schema.js";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "jsonwebtoken";
 import { UserNotAuthenticatedError } from "../api/errors.js";
