@@ -64,7 +64,7 @@ export function validateJWT(tokenString: string, secret: string): string {
 }
 
 export function getBearerToken(req: Request): string {
-  const authHeader = req.headers["authorization"];
+  const authHeader = req.headers.authorization;
   if (!authHeader) {
     throw new UserNotAuthenticatedError("No authorization header");
   }

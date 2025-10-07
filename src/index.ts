@@ -16,7 +16,7 @@ import {
   errorHandler,
 } from "./api/middleware.js";
 import { config } from "./config.js";
-import { handleCreateUser } from "./api/users.js";
+import { handleCreateUser, handleUpdateUser } from "./api/users.js";
 import { handleLogin } from "./api/login.js";
 import { handleRefresh, handleRevoke } from "./api/refreshTokens.js";
 
@@ -49,6 +49,9 @@ app.post("/api/revoke", (req, res, next) => {
 });
 app.post("/api/users", (req, res, next) => {
   Promise.resolve(handleCreateUser(req, res)).catch(next);
+});
+app.put("/api/users", (req, res, next) => {
+  Promise.resolve(handleUpdateUser(req, res)).catch(next);
 });
 app.get("/api/chirps/:chirpId", (req, res, next) => {
   Promise.resolve(handleGetChirp(req, res).catch(next));
