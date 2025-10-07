@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { NewUser, PublicUser } from "../db/schema/schema.js";
+import { User, PublicUser } from "../db/schema/schema.js";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "jsonwebtoken";
 import { UserNotAuthenticatedError } from "../api/errors.js";
@@ -10,7 +10,7 @@ const TOKEN_ISSUER = "chirpy";
 
 type Payload = Pick<JwtPayload, "iss" | "sub" | "iat" | "exp">;
 
-export function toPublicUser(user: NewUser): PublicUser {
+export function toPublicUser(user: User): PublicUser {
   const { hashedPassword, ...rest } = user;
   return rest;
 }
@@ -68,9 +68,14 @@ export function getBearerToken(req: Request): string {
   if (!authHeader) {
     throw new UserNotAuthenticatedError("No authorization header");
   }
-  const [type, token] = authHeader.split(" ");
+  const [type, rawToken] = authHeader.split(" ");
   if (type !== "Bearer") {
     throw new UserNotAuthenticatedError("Invalid authorization type");
+  }
+  const token = (rawToken ?? "").trim();
+
+  if (!token) {
+    throw new UserNotAuthenticatedError("Missing bearer token");
   }
   return token.trim();
 }

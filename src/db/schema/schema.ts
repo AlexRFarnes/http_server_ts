@@ -13,6 +13,8 @@ export const users = pgTable("users", {
 
 export type NewUser = typeof users.$inferInsert;
 
+export type User = typeof users.$inferSelect;
+
 export type PublicUser = Omit<NewUser, "hashedPassword">;
 
 export const chirps = pgTable("chirps", {
@@ -23,7 +25,9 @@ export const chirps = pgTable("chirps", {
     .defaultNow()
     .$onUpdate(() => new Date()),
   body: varchar("body").notNull(),
-  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
 });
 
 export type NewChirp = typeof chirps.$inferInsert;
@@ -35,7 +39,9 @@ export const refreshTokens = pgTable("refresh_tokens", {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
-  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
   expiresAt: timestamp("expires_at").notNull(),
   revokedAt: timestamp("revoked_at"),
 });

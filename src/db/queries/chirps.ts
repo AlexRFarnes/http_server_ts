@@ -1,6 +1,6 @@
 import { asc, eq } from "drizzle-orm";
 import { db } from "../index.js";
-import { NewChirp, chirps } from "../schema/chirps.js";
+import { NewChirp, chirps } from "../schema/schema.js";
 
 export async function createChirp(chirp: NewChirp) {
   const [result] = await db

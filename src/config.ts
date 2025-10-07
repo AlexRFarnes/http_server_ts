@@ -21,6 +21,7 @@ type APIConfig = {
   port: number;
   jwtSecret: string;
   jwtExpiresInSeconds: number;
+  refreshTokenExpiresInSeconds: number;
 };
 
 type DBConfig = {
@@ -39,6 +40,9 @@ export const config: Config = {
     port: Number(envOrThrow("PORT")),
     jwtSecret: envOrThrow("JWT_SECRET"),
     jwtExpiresInSeconds: Number(envOrThrow("JWT_EXPIRES_IN_SECONDS")),
+    refreshTokenExpiresInSeconds: Number(
+      envOrThrow("REFRESH_TOKEN_EXPIRES_IN_SECONDS")
+    ),
   },
   db: {
     url: envOrThrow("DB_URL"),

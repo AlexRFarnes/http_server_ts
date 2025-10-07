@@ -18,6 +18,7 @@ import {
 import { config } from "./config.js";
 import { handleCreateUser } from "./api/users.js";
 import { handleLogin } from "./api/login.js";
+import { handleRefresh, handleRevoke } from "./api/refreshTokens.js";
 
 const migrationClient = postgres(config.db.url, { max: 1 });
 await migrate(drizzle(migrationClient), config.db.migrationConfig);
@@ -39,6 +40,12 @@ app.post("/admin/reset", (req, res, next) => {
 });
 app.post("/api/login", (req, res, next) => {
   Promise.resolve(handleLogin(req, res)).catch(next);
+});
+app.post("/api/refresh", (req, res, next) => {
+  Promise.resolve(handleRefresh(req, res)).catch(next);
+});
+app.post("/api/revoke", (req, res, next) => {
+  Promise.resolve(handleRevoke(req, res)).catch(next);
 });
 app.post("/api/users", (req, res, next) => {
   Promise.resolve(handleCreateUser(req, res)).catch(next);

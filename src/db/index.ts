@@ -2,7 +2,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
 import * as usersSchema from "./schema/schema.js";
-import * as chirpsSchema from "./schema/chirps.js";
+import * as chirpsSchema from "./schema/schema.js";
 import { config } from "../config.js";
 
 const schema = {

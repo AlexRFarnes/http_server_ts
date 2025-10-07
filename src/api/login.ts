@@ -5,17 +5,19 @@ import { respondWithJSON } from "./json.js";
 import { toPublicUser } from "../utils/auth.js";
 import { getUserByEmail } from "../db/queries/users.js";
 import { config } from "../config.js";
-import { PublicUser } from "src/db/schema/schema.js";
+import { PublicUser } from "../db/schema/schema.js";
+import { makeRefreshToken } from "../utils/auth.js";
+import { createRefreshToken } from "../db/queries/refreshTokens.js";
 
 type LoginResponse = PublicUser & {
   token: string;
+  refreshToken: string;
 };
 
 export const handleLogin = async (req: Request, res: Response) => {
   type Parameters = {
     password: string;
     email: string;
-    expiresInSeconds?: number;
   };
 
   const params: Parameters = req.body;
@@ -35,13 +37,26 @@ export const handleLogin = async (req: Request, res: Response) => {
     throw new UserNotAuthenticatedError("Invalid email or password");
   }
 
-  const expiresInSeconds = params.expiresInSeconds
-    ? Math.min(params.expiresInSeconds, config.api.jwtExpiresInSeconds)
-    : config.api.jwtExpiresInSeconds;
+  const expiresInSeconds = config.api.jwtExpiresInSeconds;
 
   const token = makeJWT(user.id, expiresInSeconds, config.api.jwtSecret);
 
+  const rawToken = makeRefreshToken();
+
+  const refreshToken = await createRefreshToken({
+    token: rawToken,
+    expiresAt: new Date(
+      Date.now() + config.api.refreshTokenExpiresInSeconds * 1000
+    ), // 60 days later in milliseconds
+    userId: user.id,
+    revokedAt: null,
+  });
+
   const safeUser = toPublicUser(user);
 
-  respondWithJSON(res, 200, { ...safeUser, token } satisfies LoginResponse);
+  respondWithJSON(res, 200, {
+    ...safeUser,
+    token,
+    refreshToken: refreshToken.token,
+  } satisfies LoginResponse);
 };
